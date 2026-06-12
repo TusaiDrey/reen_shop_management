@@ -17,14 +17,16 @@ app.secret_key = "queen_shop_secret_key"
 # DATABASE CONFIG
 # ==========================
 import psycopg2
-import urllib.parse
+import os
 
-password = urllib.parse.quote("madmanintech2002")
-
-DATABASE_URL = f"postgresql://postgres:{password}@db.uqkxcwaubsfzoickhwow.supabase.co:5432/postgres"
+DATABASE_URL = os.environ.get("DATABASE_URL")
 
 def get_db_connection():
-    return psycopg2.connect(DATABASE_URL, sslmode='require')
+    try:
+        return psycopg2.connect(DATABASE_URL, sslmode="require")
+    except Exception as e:
+        print("DATABASE ERROR:", e)
+        return None
 
 # ==========================
 # INIT DATABASE
@@ -107,6 +109,24 @@ def init_db():
 
     cur.close()
     conn.close()
+
+# Create tables on startup
+try:
+    init_db()
+    print("Database initialized successfully")
+except Exception as e:
+    print("Database initialization failed:", e)
+
+
+def get_db_connection():
+    try:
+        return psycopg2.connect(
+            DATABASE_URL,
+            sslmode="require"
+        )
+    except Exception as e:
+        print("DATABASE ERROR:", e)
+        return None
 
 
 # ==========================
