@@ -12,21 +12,29 @@ from flask import make_response
 app = Flask(__name__)
 app.secret_key = "queen_shop_secret_key"
 
-
 # ==========================
 # DATABASE CONFIG
 # ==========================
-import psycopg2
 import os
+import psycopg2
 
 DATABASE_URL = os.environ.get("DATABASE_URL")
 
+if not DATABASE_URL:
+    print("WARNING: DATABASE_URL environment variable not set")
+
 def get_db_connection():
     try:
-        return psycopg2.connect(DATABASE_URL, sslmode="require")
+        conn = psycopg2.connect(
+            DATABASE_URL,
+            sslmode="require"
+        )
+        return conn
+
     except Exception as e:
-        print("DATABASE ERROR:", e)
+        print(f"DATABASE ERROR: {e}")
         return None
+
 
 # ==========================
 # INIT DATABASE
@@ -34,29 +42,33 @@ def get_db_connection():
 def init_db():
 
     conn = get_db_connection()
-    if not conn:
-        print("Skipping DB setup (DB not ready)")
+
+    if conn is None:
+        print("Database connection failed.")
         return
 
     cur = conn.cursor()
 
+    # USERS
     cur.execute("""
         CREATE TABLE IF NOT EXISTS users (
             id SERIAL PRIMARY KEY,
-            username VARCHAR(100) UNIQUE,
-            password VARCHAR(100),
-            role VARCHAR(50)
+            username VARCHAR(100) UNIQUE NOT NULL,
+            password VARCHAR(100) NOT NULL,
+            role VARCHAR(50) NOT NULL
         );
     """)
 
+    # SHOPS
     cur.execute("""
         CREATE TABLE IF NOT EXISTS shops (
             id SERIAL PRIMARY KEY,
-            shop_name VARCHAR(150),
+            shop_name VARCHAR(150) NOT NULL,
             shop_type VARCHAR(100)
         );
     """)
 
+    # PRODUCTS
     cur.execute("""
         CREATE TABLE IF NOT EXISTS products (
             id SERIAL PRIMARY KEY,
@@ -67,17 +79,19 @@ def init_db():
         );
     """)
 
+    # STOCKS
     cur.execute("""
         CREATE TABLE IF NOT EXISTS stocks (
             id SERIAL PRIMARY KEY,
             shop_id INT REFERENCES shops(id) ON DELETE CASCADE,
             stock_name VARCHAR(150),
-            quantity INT,
+            quantity INT DEFAULT 0,
             selling_price NUMERIC(10,2),
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
     """)
 
+    # SALES
     cur.execute("""
         CREATE TABLE IF NOT EXISTS sales (
             id SERIAL PRIMARY KEY,
@@ -89,45 +103,41 @@ def init_db():
         );
     """)
 
-    cur.execute("""
-    SELECT COALESCE(SUM(quantity), 0)
-    FROM sales
-    WHERE DATE(created_at) = CURRENT_DATE
-""")
-    today_items_sold = cur.fetchone()[0]
-
     conn.commit()
 
-    # default admin
-    cur.execute("SELECT username FROM users WHERE username=%s", ("queen",))
-    if not cur.fetchone():
+    # CREATE DEFAULT ADMIN
+    cur.execute(
+        "SELECT id FROM users WHERE username = %s",
+        ("queen",)
+    )
+
+    admin = cur.fetchone()
+
+    if admin is None:
         cur.execute("""
             INSERT INTO users (username, password, role)
             VALUES (%s, %s, %s)
-        """, ("queen", "1234", "Admin"))
+        """, (
+            "queen",
+            "1234",
+            "Admin"
+        ))
+
         conn.commit()
 
     cur.close()
     conn.close()
 
-# Create tables on startup
+    print("Database initialized successfully")
+
+
+# ==========================
+# AUTO CREATE TABLES
+# ==========================
 try:
     init_db()
-    print("Database initialized successfully")
 except Exception as e:
-    print("Database initialization failed:", e)
-
-
-def get_db_connection():
-    try:
-        return psycopg2.connect(
-            DATABASE_URL,
-            sslmode="require"
-        )
-    except Exception as e:
-        print("DATABASE ERROR:", e)
-        return None
-
+    print(f"Database initialization failed: {e}")
 
 # ==========================
 # LOGIN
@@ -1008,5 +1018,4 @@ def delete_shop(shop_id):
 # START APP
 # ==========================
 if __name__ == "__main__":
-    init_db()
     app.run(host="0.0.0.0", port=5000, debug=True)
