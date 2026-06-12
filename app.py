@@ -21,7 +21,7 @@ import psycopg2
 DATABASE_URL = os.environ.get("DATABASE_URL")
 
 if not DATABASE_URL:
-    print("WARNING: DATABASE_URL environment variable not set")
+    raise ValueError("DATABASE_URL is missing. Set it in Render environment variables.")
 
 def get_db_connection():
     try:
@@ -29,12 +29,12 @@ def get_db_connection():
             DATABASE_URL,
             sslmode="require"
         )
+        conn.autocommit = True
         return conn
 
     except Exception as e:
         print(f"DATABASE ERROR: {e}")
         return None
-
 
 # ==========================
 # INIT DATABASE
@@ -149,11 +149,6 @@ def login():
 
         username = request.form["username"]
         password = request.form["password"]
-
-        if username == "queen" and password == "1234":
-            session["user"] = "queen"
-            session["role"] = "Admin"
-            return redirect(url_for("dashboard"))
 
         conn = get_db_connection()
 
@@ -1018,4 +1013,5 @@ def delete_shop(shop_id):
 # START APP
 # ==========================
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host="0.0.0.0", port=port, debug=False)
