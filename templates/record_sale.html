@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<title>Record Sale</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+    font-family:Segoe UI;
+}
+
+body{
+    margin:0;
+    background:#f4f6f9;
+}
+
+/* HEADER */
+.header{
+    background:#1e293b;
+    color:white;
+    padding:15px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+}
+
+.header h2{
+    margin:0;
+    font-size:18px;
+}
+
+.header a{
+    background:#2563eb;
+    color:white;
+    padding:10px 15px;
+    text-decoration:none;
+    border-radius:8px;
+    font-size:14px;
+}
+
+/* CONTAINER */
+.container{
+    padding:15px;
+    max-width:900px;
+    margin:auto;
+}
+
+/* SHOP BOX */
+.box{
+    background:white;
+    padding:15px;
+    border-radius:10px;
+    margin-bottom:15px;
+    box-shadow:0 2px 8px rgba(0,0,0,0.08);
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:10px;
+}
+
+/* SHOP NAME */
+.box h3{
+    margin:0;
+    font-size:16px;
+    color:#1f2937;
+}
+
+/* BUTTON */
+.box a{
+    background:#2563eb;
+    color:white;
+    padding:10px 15px;
+    text-decoration:none;
+    border-radius:8px;
+    font-size:14px;
+    display:inline-block;
+}
+
+/* HOVER */
+.box a:hover{
+    background:#1d4ed8;
+}
+
+/* MOBILE */
+@media(max-width:768px){
+
+    .header{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:10px;
+    }
+
+    .header h2{
+        font-size:16px;
+    }
+
+    .box{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .box a{
+        width:100%;
+        text-align:center;
+    }
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+    <h2>Record Sale</h2>
+    <a href="/dashboard">Back</a>
+</div>
+
+<div class="container">
+
+{% for s in shops %}
+
+<div class="box">
+    <h3>{{ s[1] }} ({{ s[2] }})</h3>
+    <a href="/shop-sale/{{ s[0] }}">Record Sale</a>
+</div>
+
+{% endfor %}
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Edit Shop</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+    font-family:Segoe UI, Arial, sans-serif;
+}
+
+body{
+    margin:0;
+    background:#f4f6f9;
+}
+
+.header{
+    background:#1e293b;
+    color:white;
+    padding:15px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+}
+
+.header a{
+    color:white;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+.container{
+    max-width:700px;
+    margin:auto;
+    padding:20px;
+}
+
+.box{
+    background:white;
+    padding:20px;
+    border-radius:12px;
+    box-shadow:0 3px 10px rgba(0,0,0,.1);
+}
+
+input, select{
+    width:100%;
+    padding:12px;
+    margin-top:10px;
+    border:1px solid #ccc;
+    border-radius:8px;
+    font-size:16px;
+}
+
+button{
+    width:100%;
+    margin-top:15px;
+    padding:12px;
+    background:#2563eb;
+    color:white;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:16px;
+}
+
+button:hover{
+    opacity:0.9;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+    <h2>Edit Shop</h2>
+    <a href="/shops">Back</a>
+</div>
+
+<div class="container">
+
+<div class="box">
+
+<form method="POST">
+
+    <label>Shop Name</label>
+    <input type="text" name="shop_name" value="{{ shop[1] }}" required>
+
+    <label>Shop Type</label>
+    <select name="shop_type" required>
+        <option value="Bar" {% if shop[2]=='Bar' %}selected{% endif %}>Bar</option>
+        <option value="Restaurant" {% if shop[2]=='Restaurant' %}selected{% endif %}>Restaurant</option>
+        <option value="Grocery" {% if shop[2]=='Grocery' %}selected{% endif %}>Grocery</option>
+        <option value="Shop" {% if shop[2]=='Shop' %}selected{% endif %}>General Shop</option>
+    </select>
+
+    <button type="submit">Update Shop</button>
+
+</form>
+
+</div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<title>Shop Sale</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    font-family:Segoe UI;
+    background:#f4f6f9;
+    margin:0;
+    padding:0;
+}
+
+/* HEADER */
+.header{
+    background:#1e293b;
+    color:white;
+    padding:15px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+}
+
+.header h2{
+    font-size:18px;
+    margin:0;
+}
+
+.header a{
+    color:white;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+/* CONTAINER */
+.container{
+    padding:15px;
+    max-width:900px;
+    margin:auto;
+}
+
+/* BOX */
+.box{
+    background:white;
+    padding:15px;
+    border-radius:10px;
+    margin-bottom:15px;
+    box-shadow:0 2px 8px rgba(0,0,0,0.08);
+}
+
+/* INPUTS */
+input,select{
+    width:100%;
+    padding:12px;
+    margin:8px 0;
+    border:1px solid #ccc;
+    border-radius:8px;
+    font-size:16px;
+}
+
+/* BUTTON */
+button{
+    background:#2563eb;
+    color:white;
+    padding:12px;
+    width:100%;
+    border:none;
+    border-radius:8px;
+    font-size:16px;
+}
+
+/* TABLE WRAPPER (FIX MOBILE SCROLL) */
+.table-wrapper{
+    overflow-x:auto;
+}
+
+/* TABLE */
+table{
+    width:100%;
+    border-collapse:collapse;
+    background:white;
+    min-width:500px;
+}
+
+th,td{
+    padding:10px;
+    border-bottom:1px solid #ddd;
+    text-align:left;
+}
+
+th{
+    background:#f1f5f9;
+}
+
+/* MOBILE */
+@media(max-width:768px){
+
+    .header{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:10px;
+    }
+
+    .header h2{
+        font-size:16px;
+    }
+
+    .container{
+        padding:10px;
+    }
+
+    button{
+        font-size:15px;
+    }
+
+    input,select{
+        font-size:15px;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="header">
+    <h2>{{ shop[1] }} Sales</h2>
+    <a href="/record-sale">Back</a>
+</div>
+
+<div class="container">
+
+<div class="box">
+<form method="POST">
+
+<select name="stock_id" required>
+    {% for s in stocks %}
+    <option value="{{ s[0] }}">
+        {{ s[1] }} (Stock: {{ s[2] }})
+    </option>
+    {% endfor %}
+</select>
+
+<input type="number" name="quantity" placeholder="Quantity Sold" required>
+
+<button type="submit">Record Sale</button>
+
+</form>
+</div>
+
+<div class="table-wrapper">
+<table>
+
+<tr>
+<th>Stock</th>
+<th>Available</th>
+<th>Price</th>
+</tr>
+
+{% for s in stocks %}
+<tr>
+<td>{{ s[1] }}</td>
+<td>{{ s[2] }}</td>
+<td>K{{ s[3] }}</td>
+</tr>
+{% endfor %}
+
+</table>
+</div>
+
+</div>
+
+</body>
+</html>

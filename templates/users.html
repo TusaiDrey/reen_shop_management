@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<title>Users</title>
+
+<style>
+
+*{
+box-sizing:border-box;
+}
+
+body{
+margin:0;
+font-family:Segoe UI;
+background:#f4f6f9;
+-webkit-text-size-adjust:100%;
+}
+
+.header{
+background:#1e293b;
+color:white;
+padding:15px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+flex-wrap:wrap;
+}
+
+.container{
+padding:20px;
+max-width:900px;
+margin:auto;
+}
+
+.box{
+background:white;
+padding:15px;
+border-radius:10px;
+margin-bottom:15px;
+box-shadow:0 2px 10px rgba(0,0,0,.1);
+overflow-x:auto;
+}
+
+input, select{
+width:100%;
+padding:10px;
+margin:8px 0;
+border:1px solid #ddd;
+border-radius:8px;
+font-size:16px;
+}
+
+button{
+background:#2563eb;
+color:white;
+padding:10px;
+width:100%;
+border:none;
+border-radius:8px;
+cursor:pointer;
+font-size:16px;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:10px;
+min-width:500px;
+}
+
+th, td{
+padding:10px;
+border-bottom:1px solid #ddd;
+font-size:14px;
+text-align:left;
+}
+
+a{
+text-decoration:none;
+}
+
+@media(max-width:600px){
+
+.header{
+flex-direction:column;
+align-items:flex-start;
+gap:10px;
+}
+
+.container{
+padding:10px;
+}
+
+.box{
+padding:12px;
+}
+
+th, td{
+padding:8px;
+font-size:13px;
+}
+
+button{
+padding:12px;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="header">
+<h2>User Management</h2>
+<a href="/dashboard" style="color:white;">Back</a>
+</div>
+
+<div class="container">
+
+<!-- ADD USER -->
+<div class="box">
+<h3>Add New User</h3>
+
+<form method="POST">
+
+<input type="text" name="username" placeholder="Username" required>
+
+<input type="password" name="password" placeholder="Password" required>
+
+<select name="role">
+    <option value="User">User</option>
+    <option value="Admin">Admin</option>
+</select>
+
+<button type="submit">Add User</button>
+
+</form>
+</div>
+
+<!-- USER LIST -->
+<div class="box">
+<h3>Existing Users</h3>
+
+<table>
+<tr>
+<th>ID</th>
+<th>Username</th>
+<th>Role</th>
+<th>Actions</th>
+</tr>
+
+{% for u in users %}
+<tr>
+<td>{{ u[0] }}</td>
+<td>{{ u[1] }}</td>
+<td>{{ u[2] }}</td>
+
+<td>
+
+<a href="/edit-user/{{ u[0] }}" style="color:blue;">Edit</a>
+
+{% if u[2] != 'Admin' %}
+<a href="/delete-user/{{ u[0] }}" 
+   onclick="return confirm('Delete this user?')" 
+   style="color:red; margin-left:10px;">
+   Delete
+</a>
+{% endif %}
+
+</td>
+
+</tr>
+{% endfor %}
+
+</table>
+
+</div>
+
+</div>
+
+</body>
+</html>

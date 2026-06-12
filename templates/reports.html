@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Reports</title>
+
+<style>
+
+*{
+box-sizing:border-box;
+}
+
+body{
+font-family:Segoe UI;
+background:#f4f6f9;
+margin:0;
+-webkit-text-size-adjust:100%;
+}
+
+/* HEADER */
+.header{
+background:#1e293b;
+color:white;
+padding:15px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+flex-wrap:wrap;
+gap:10px;
+}
+
+.header h2{
+font-size:20px;
+margin:0;
+}
+
+.header a{
+color:white;
+text-decoration:none;
+font-weight:bold;
+}
+
+/* CONTAINER */
+.container{
+padding:20px;
+max-width:1000px;
+margin:auto;
+}
+
+/* BOX */
+.box{
+background:white;
+padding:15px;
+border-radius:10px;
+margin-bottom:15px;
+overflow-x:auto;
+}
+
+/* INPUT */
+input{
+width:100%;
+padding:10px;
+margin:8px 0;
+font-size:16px;
+}
+
+/* BUTTON */
+button{
+background:#2563eb;
+color:white;
+padding:12px;
+width:100%;
+border:none;
+border-radius:8px;
+cursor:pointer;
+font-size:16px;
+}
+
+/* TABLE */
+table{
+width:100%;
+border-collapse:collapse;
+background:white;
+min-width:600px; /* important for mobile scroll */
+}
+
+th,td{
+padding:10px;
+border-bottom:1px solid #ddd;
+font-size:14px;
+}
+
+/* MOBILE FIX */
+@media(max-width:768px){
+
+.container{
+padding:10px;
+}
+
+.box{
+padding:12px;
+}
+
+th,td{
+padding:8px;
+font-size:13px;
+}
+
+button{
+font-size:15px;
+}
+
+.header h2{
+font-size:18px;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="header">
+<h2>Sales Reports</h2>
+<a href="/dashboard">Back</a>
+</div>
+
+<div class="container">
+
+<div class="box">
+<form method="POST" action="/download-report">
+
+<label>Start Date</label>
+<input type="date" name="start_date" required>
+
+<label>End Date</label>
+<input type="date" name="end_date" required>
+
+<button type="submit">Download PDF Report</button>
+
+</form>
+</div>
+
+<div class="box">
+<h3>Total Sales: K{{ total_sales }}</h3>
+</div>
+
+<div class="box">
+
+<table>
+<tr>
+<th>Shop</th>
+<th>Item</th>
+<th>Quantity</th>
+<th>Total</th>
+<th>Date</th>
+</tr>
+
+{% for r in report_data %}
+<tr>
+<td>{{ r[1] }}</td>
+<td>{{ r[2] }}</td>
+<td>{{ r[3] }}</td>
+<td>K{{ r[4] }}</td>
+<td>{{ r[5] }}</td>
+</tr>
+{% endfor %}
+
+</table>
+
+</div>
+
+</div>
+
+</body>
+</html>

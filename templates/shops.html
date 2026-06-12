@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<title>Manage Shops</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    font-family:Segoe UI, Arial, sans-serif;
+    background:#f4f6f9;
+}
+
+.header{
+    background:#1e293b;
+    color:white;
+    padding:15px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:10px;
+}
+
+.header h2{
+    margin:0;
+}
+
+.header a{
+    color:white;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+.container{
+    padding:20px;
+    max-width:1000px;
+    margin:auto;
+}
+
+.form-box,
+.table-box{
+    background:white;
+    padding:20px;
+    border-radius:12px;
+    box-shadow:0 3px 10px rgba(0,0,0,.1);
+}
+
+.table-box{
+    margin-top:20px;
+    overflow-x:auto;
+}
+
+input,
+select{
+    width:100%;
+    padding:12px;
+    margin-top:10px;
+    margin-bottom:15px;
+    border:1px solid #ccc;
+    border-radius:8px;
+    font-size:16px;
+}
+
+button{
+    background:#2563eb;
+    color:white;
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:16px;
+    width:100%;
+}
+
+button:hover{
+    opacity:0.9;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:650px;
+}
+
+th{
+    background:#f1f5f9;
+}
+
+th, td{
+    padding:12px;
+    border-bottom:1px solid #ddd;
+    text-align:left;
+}
+
+.actions{
+    white-space:nowrap;
+}
+
+.actions a{
+    display:inline-block;
+    margin:2px;
+    text-decoration:none;
+    padding:8px 12px;
+    border-radius:6px;
+    color:white;
+    font-size:13px;
+}
+
+.edit{
+    background:#f59e0b;
+}
+
+.view{
+    background:#10b981;
+}
+
+.delete{
+    background:#ef4444;
+}
+
+@media screen and (max-width:768px){
+
+    .header{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .container{
+        padding:10px;
+    }
+
+    .form-box,
+    .table-box{
+        padding:15px;
+    }
+
+    th,
+    td{
+        padding:8px;
+        font-size:14px;
+    }
+
+    .actions a{
+        display:block;
+        margin-bottom:5px;
+        text-align:center;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="header">
+    <h2>Manage Shops</h2>
+    <a href="/dashboard">Back</a>
+</div>
+
+<div class="container">
+
+    <!-- CREATE SHOP -->
+    <div class="form-box">
+
+        <h3>Create New Shop</h3>
+
+        <form method="POST" action="/create-shop">
+
+            <input type="text"
+                   name="shop_name"
+                   placeholder="Shop Name"
+                   required>
+
+            <select name="shop_type" required>
+                <option value="">Select Type</option>
+                <option value="Bar">Bar</option>
+                <option value="Restaurant">Restaurant</option>
+                <option value="Grocery">Grocery</option>
+                <option value="Shop">General Shop</option>
+            </select>
+
+            <button type="submit">
+                Create Shop
+            </button>
+
+        </form>
+
+    </div>
+
+    <!-- SHOP LIST -->
+    <div class="table-box">
+
+        <h3>Existing Shops</h3>
+
+        <table>
+
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Actions</th>
+            </tr>
+
+            {% for s in shops %}
+
+            <tr>
+                <td>{{ s[0] }}</td>
+                <td>{{ s[1] }}</td>
+                <td>{{ s[2] }}</td>
+
+                <td class="actions">
+
+                    <a class="view"
+                       href="/view-shop/{{ s[0] }}">
+                       View
+                    </a>
+
+                    <a class="edit"
+                       href="/edit-shop/{{ s[0] }}">
+                       Edit
+                    </a>
+
+                    <a class="delete"
+                       href="/delete-shop/{{ s[0] }}"
+                       onclick="return confirm('Delete this shop?')">
+                       Delete
+                    </a>
+
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </table>
+
+    </div>
+
+</div>
+
+</body>
+</html>

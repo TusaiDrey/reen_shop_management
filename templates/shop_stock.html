@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Shop Stock</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+    font-family:Segoe UI, Arial, sans-serif;
+}
+
+body{
+    margin:0;
+    background:#f4f6f9;
+}
+
+.header{
+    background:#1e293b;
+    color:white;
+    padding:15px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+}
+
+.container{
+    max-width:1000px;
+    margin:auto;
+    padding:20px;
+}
+
+.search-box{
+    margin-bottom:15px;
+}
+
+input{
+    width:100%;
+    padding:12px;
+    border-radius:8px;
+    border:1px solid #ccc;
+    font-size:16px;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    background:white;
+    border-radius:10px;
+    overflow:hidden;
+}
+
+th{
+    background:#f1f5f9;
+}
+
+th, td{
+    padding:12px;
+    text-align:left;
+    border-bottom:1px solid #ddd;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+    <h2>{{ shop[1] }} Stock</h2>
+    <a href="/view-stock">Back</a>
+</div>
+
+<div class="container">
+
+<div class="search-box">
+    <input type="text" id="search" placeholder="Search stock name...">
+</div>
+
+<table id="stockTable">
+
+<tr>
+    <th>Name</th>
+    <th>Quantity</th>
+    <th>Price</th>
+    <th>Total</th>
+</tr>
+
+{% for s in stocks %}
+<tr>
+    <td>{{ s[1] }}</td>
+    <td>{{ s[2] }}</td>
+    <td>K{{ s[3] }}</td>
+    <td>K{{ s[2] * s[3] }}</td>
+</tr>
+{% endfor %}
+
+</table>
+
+</div>
+
+<script>
+
+document.getElementById("search").addEventListener("keyup", function(){
+
+    let value = this.value.toLowerCase();
+    let rows = document.querySelectorAll("#stockTable tr");
+
+    rows.forEach((row, index) => {
+
+        if(index === 0) return;
+
+        let text = row.innerText.toLowerCase();
+
+        row.style.display = text.includes(value) ? "" : "none";
+    });
+
+});
+
+</script>
+
+</body>
+</html>

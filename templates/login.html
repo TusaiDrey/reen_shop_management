@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<title>Queen Shop Management</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Segoe UI, Arial, sans-serif;
+}
+
+body{
+    background:#f4f6f9;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+}
+
+.login-box{
+    background:white;
+    width:100%;
+    max-width:420px;
+    padding:35px;
+    border-radius:20px;
+    box-shadow:0 10px 25px rgba(0,0,0,.1);
+}
+
+.logo{
+    width:90px;
+    height:90px;
+    background:#2563eb;
+    color:white;
+    border-radius:50%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:40px;
+    font-weight:bold;
+    margin:auto;
+}
+
+h1{
+    text-align:center;
+    margin-top:15px;
+    color:#1f2937;
+}
+
+p{
+    text-align:center;
+    margin-top:8px;
+    margin-bottom:20px;
+    color:#6b7280;
+}
+
+label{
+    display:block;
+    margin-top:12px;
+    font-weight:bold;
+    color:#374151;
+}
+
+input{
+    width:100%;
+    padding:12px;
+    margin-top:6px;
+    border:1px solid #ddd;
+    border-radius:10px;
+    font-size:16px;
+}
+
+input:focus{
+    outline:none;
+    border-color:#2563eb;
+}
+
+button{
+    width:100%;
+    padding:14px;
+    background:#2563eb;
+    color:white;
+    border:none;
+    border-radius:10px;
+    margin-top:20px;
+    cursor:pointer;
+    font-size:16px;
+    font-weight:bold;
+}
+
+button:hover{
+    background:#1d4ed8;
+}
+
+.error{
+    color:red;
+    text-align:center;
+    margin-bottom:10px;
+}
+
+.footer{
+    text-align:center;
+    margin-top:20px;
+    font-size:12px;
+    color:gray;
+}
+
+/* TABLETS */
+@media screen and (max-width:768px){
+
+    .login-box{
+        max-width:500px;
+        padding:25px;
+    }
+
+    .logo{
+        width:80px;
+        height:80px;
+        font-size:34px;
+    }
+
+    h1{
+        font-size:28px;
+    }
+}
+
+/* PHONES */
+@media screen and (max-width:480px){
+
+    body{
+        padding:15px;
+    }
+
+    .login-box{
+        padding:20px;
+        border-radius:15px;
+    }
+
+    .logo{
+        width:70px;
+        height:70px;
+        font-size:28px;
+    }
+
+    h1{
+        font-size:24px;
+    }
+
+    p{
+        font-size:14px;
+    }
+
+    input{
+        padding:12px;
+        font-size:16px;
+    }
+
+    button{
+        padding:12px;
+        font-size:15px;
+    }
+}
+
+</style>
+
+<!-- PWA + App settings -->
+<meta name="theme-color" content="#0f172a">
+<link rel="apple-touch-icon" href="{{ url_for('static', filename='images/reen.png') }}">
+<link rel="icon" href="{{ url_for('static', filename='images/reen.png') }}">
+<link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+
+</head>
+
+<body>
+
+<div class="login-box">
+
+    <div class="logo">RBC</div>
+
+    <h1>Reen</h1>
+
+    <p>Shop Management System</p>
+
+    {% if error %}
+    <div class="error">{{ error }}</div>
+    {% endif %}
+
+    <form method="POST">
+
+        <label>Username</label>
+        <input type="text" name="username" required>
+
+        <label>Password</label>
+        <input type="password" name="password" required>
+
+        <button type="submit">
+            Login
+        </button>
+
+    </form>
+
+    <div class="footer">
+        Version 1.0 | DreyTech Solutions
+    </div>
+
+</div>
+
+<!-- INSTALL BUTTON -->
+<button id="installBtn" style="
+    display:none;
+    position:fixed;
+    bottom:20px;
+    right:20px;
+    padding:12px 16px;
+    background:#0f172a;
+    color:white;
+    border:none;
+    border-radius:10px;
+    font-weight:bold;
+    cursor:pointer;
+    box-shadow:0 5px 15px rgba(0,0,0,0.2);
+    z-index:9999;
+">
+    Install App
+</button>
+
+<!-- FINAL PWA SCRIPT (UPDATED) -->
+<script>
+
+/* 1. PAGE LOAD DEBUG */
+window.addEventListener("load", () => {
+    console.log("Page loaded - checking install eligibility...");
+});
+
+/* 2. PWA INSTALL LOGIC */
+let deferredPrompt;
+const installBtn = document.getElementById("installBtn");
+
+// Detect install availability
+window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+
+    setTimeout(() => {
+        installBtn.style.display = "block";
+    }, 2000);
+});
+
+// Click install
+installBtn.addEventListener("click", async () => {
+    if (!deferredPrompt) return;
+
+    installBtn.innerText = "Installing...";
+    installBtn.disabled = true;
+
+    deferredPrompt.prompt();
+
+    const choice = await deferredPrompt.userChoice;
+
+    if (choice.outcome === "accepted") {
+        installBtn.style.display = "none";
+    } else {
+        installBtn.innerText = "Install App";
+        installBtn.disabled = false;
+    }
+
+    deferredPrompt = null;
+});
+
+// Hide when installed
+window.addEventListener("appinstalled", () => {
+    installBtn.style.display = "none";
+});
+
+// Hide if already installed
+if (window.matchMedia('(display-mode: standalone)').matches) {
+    installBtn.style.display = "none";
+}
+
+/* 3. SERVICE WORKER */
+if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("/static/sw.js")
+    .then(() => console.log("Service Worker Registered"))
+    .catch(err => console.log("SW failed", err));
+}
+
+</script>
+
+</body>
+</html>

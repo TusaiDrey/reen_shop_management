@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Edit User</title>
+
+<style>
+body{
+margin:0;
+font-family:Segoe UI;
+background:#f4f6f9;
+}
+
+.header{
+background:#1e293b;
+color:white;
+padding:15px;
+display:flex;
+justify-content:space-between;
+}
+
+.container{
+padding:20px;
+max-width:600px;
+margin:auto;
+}
+
+.box{
+background:white;
+padding:20px;
+border-radius:10px;
+}
+
+input, select{
+width:100%;
+padding:10px;
+margin:8px 0;
+border-radius:8px;
+border:1px solid #ddd;
+}
+
+button{
+background:#2563eb;
+color:white;
+padding:10px;
+width:100%;
+border:none;
+border-radius:8px;
+cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+<h2>Edit User</h2>
+<a href="/users" style="color:white;">Back</a>
+</div>
+
+<div class="container">
+
+<div class="box">
+
+<form method="POST">
+
+<input type="text" name="username" value="{{ user[1] }}" required>
+
+<input type="password" name="password" value="{{ user[2] }}" required>
+
+<select name="role">
+    <option value="User" {% if user[3]=='User' %}selected{% endif %}>User</option>
+    <option value="Admin" {% if user[3]=='Admin' %}selected{% endif %}>Admin</option>
+</select>
+
+<button type="submit">Update User</button>
+
+</form>
+
+</div>
+
+</div>
+
+</body>
+</html>
